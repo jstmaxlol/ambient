@@ -2,8 +2,9 @@ import discord
 from discord.ext import commands
 import yt_dlp
 import asyncio
+import os
 
-TOKEN = ""                  # bot token
+TOKEN = ""
 PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLuI-iSzcTZFUfVlc9OoZL5LbubQ_T_st9"
 
 intents = discord.Intents.default()
@@ -12,29 +13,38 @@ intents.voice_states = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-ytdl_opts = {
-    "format": "bestaudio/best",
+ytdl_playlist_opts = {
     "quiet": True,
     "extract_flat": True,
 }
 
+ytdl_audio_opts = {
+    "quiet": True,
+    "format": "bestaudio/best",
+}
+
 ffmpeg_opts = {
-    "options": "-vn"
+    "options": "-vn",
 }
 
 playlist_urls = []
+play_task = None
 
 def load_playlist():
     global playlist_urls
-    with yt_dlp.YoutubeDL(ytdl_opts) as ydl:
+    with yt_dlp.YoutubeDL(ytdl_playlist_opts) as ydl:
         info = ydl.extract_info(PLAYLIST_URL, download=False)
         playlist_urls = [entry["url"] for entry in info["entries"]]
 
-async def play_loop(vc):
+async def play_loop(vc: discord.VoiceClient):
     global playlist_urls
+
     while True:
         for url in playlist_urls:
-            with yt_dlp.YoutubeDL({"format": "bestaudio"}) as ydl:
+            if not vc.is_connected():
+                return
+
+            with yt_dlp.YoutubeDL(ytdl_audio_opts) as ydl:
                 info = ydl.extract_info(url, download=False)
                 audio_url = info["url"]
 
@@ -50,15 +60,39 @@ async def on_ready():
 
 @bot.command()
 async def start(ctx):
-    if not ctx.author.voice:
+    global play_task
+
+    if not ctx.author.voice or not ctx.author.voice.channel:
         await ctx.send("join a voice channel first")
         return
 
     channel = ctx.author.voice.channel
-    vc = await channel.connect()
 
-    load_playlist()
-    await play_loop(vc)
+    vc = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if vc and vc.is_connected():
+        await vc.move_to(channel)
+    else:
+        vc = await channel.connect()
+
+    # self-deafen (anti-spy vibes)
+    await vc.edit(deafen=True)
+
+    if not playlist_urls:
+        load_playlist()
+
+    if play_task and not play_task.done():
+        play_task.cancel()
+
+    play_task = bot.loop.create_task(play_loop(vc))
+
+    await ctx.send("joined vc, deafened, looping playlist 🌫️🎶")
+
+@bot.command()
+async def stop(ctx):
+    vc = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if vc and vc.is_connected():
+        await vc.disconnect()
+        await ctx.send("disconnected")
 
 bot.run(TOKEN)
 
