@@ -74,8 +74,11 @@ async def start(ctx):
     else:
         vc = await channel.connect()
 
-    # self-deafen (anti-spy vibes)
-    await vc.edit(deafen=True)
+    await ctx.guild.change_voice_state(
+        channel=vc.channel,
+        self_deaf=True
+    )
+
 
     if not playlist_urls:
         load_playlist()
