@@ -35,6 +35,7 @@ def load_playlist():
     with yt_dlp.YoutubeDL(ytdl_playlist_opts) as ydl:
         info = ydl.extract_info(PLAYLIST_URL, download=False)
         playlist_urls = [entry["url"] for entry in info["entries"]]
+    random.shuffle(playlist_urls)
 
 async def play_loop(vc: discord.VoiceClient):
     global playlist_urls
