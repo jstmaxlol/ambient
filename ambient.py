@@ -8,7 +8,7 @@ import random
 TOKEN = ""
 PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLuI-iSzcTZFUfVlc9OoZL5LbubQ_T_st9"
 
-volume = 0.33
+volume = 0.16
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -126,13 +126,15 @@ async def volume_cmd(ctx, vol: str):
 @bot.command(aliases=['?', 'h'])
 async def help(ctx):
     await ctx.send(
-        "\nambient.py --- with ♥ by czjstmax\n"
+        "------------------------------\n"
+        "ambient.py --- with ♥ by czjstmax\n"
         "> server: discord.gg/6mbgsYveCn\n"
         "> github: github.com/jstmaxlol/ambient\n\n"
         "### >> available commands <<\n"
         "`::start` / `::join` / `::hi` / `::gm` - join a vc and use this command to eep ;)\n"
         "`::stop` / `::quit` / `::bye` / `::gn` - exits from the current vc and salutes\n"
-        "`::help` / `::?` / `::h` - shows this help/usage message~!"
+        "`::help` / `::?` / `::h` - shows this help/usage message~!\n"
+        "------------------------------"
     )
 
 bot.run(TOKEN)
