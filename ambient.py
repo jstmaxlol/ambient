@@ -3,6 +3,7 @@ from discord.ext import commands
 import yt_dlp
 import asyncio
 import os
+import random
 
 TOKEN = ""
 PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLuI-iSzcTZFUfVlc9OoZL5LbubQ_T_st9"
