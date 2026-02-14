@@ -128,8 +128,8 @@ async def help(ctx):
     await ctx.send(
         "------------------------------\n"
         "ambient.py --- with ♥ by czjstmax\n"
-        "> server: discord.gg/6mbgsYveCn\n"
-        "> github: github.com/jstmaxlol/ambient\n\n"
+        "> server: https://discord.gg/6mbgsYveCn\n"
+        "> github: https://github.com/jstmaxlol/ambient\n\n"
         "### >> available commands <<\n"
         "`::start` / `::join` / `::hi` / `::gm` - join a vc and use this command to eep ;)\n"
         "`::stop` / `::quit` / `::bye` / `::gn` - exits from the current vc and salutes\n"
