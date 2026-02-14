@@ -8,11 +8,13 @@ import random
 TOKEN = ""
 PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLuI-iSzcTZFUfVlc9OoZL5LbubQ_T_st9"
 
+volume = 0.6
+
 intents = discord.Intents.default()
 intents.message_content = True
 intents.voice_states = True
 
-bot = commands.Bot(command_prefix=";;", intents=intents)
+bot = commands.Bot(command_prefix=":", intents=intents)
 
 ytdl_playlist_opts = {
     "quiet": True,
@@ -51,6 +53,7 @@ async def play_loop(vc: discord.VoiceClient):
                 audio_url = info["url"]
 
             source = discord.FFmpegPCMAudio(audio_url, **ffmpeg_opts)
+            source = discord.PCMVolumeTransformer(source, volume=volume)
             vc.play(source)
 
             while vc.is_playing():
@@ -58,14 +61,14 @@ async def play_loop(vc: discord.VoiceClient):
 
 @bot.event
 async def on_ready():
-    print(f"logged in as {bot.user}")
+    print(f"[ambient/status] logged in as {bot.user}")
 
 @bot.command()
 async def start(ctx):
     global play_task
 
     if not ctx.author.voice or not ctx.author.voice.channel:
-        await ctx.send("join a voice channel first")
+        await ctx.send("♥! you have to join a voice channel first~!")
         return
 
     channel = ctx.author.voice.channel
@@ -90,14 +93,47 @@ async def start(ctx):
 
     play_task = bot.loop.create_task(play_loop(vc))
 
-    await ctx.send("joined vc, deafened, looping playlist 🌫️🎶")
+    await ctx.send("♥ joined vc, deafened, looping playlist~! 🌫️🎶")
 
 @bot.command()
 async def stop(ctx):
     vc = discord.utils.get(bot.voice_clients, guild=ctx.guild)
     if vc and vc.is_connected():
         await vc.disconnect()
-        await ctx.send("disconnected")
+        await ctx.send("♥ disconnected.. bye bye~~!")
 
 bot.run(TOKEN)
+
+@bot.command(aliases=['vol'])
+async def volume_cmd(ctx, vol: str):
+    """set volume in % from 0-100"""
+    global volume
+    try:
+        if vol.endswith('%'):
+            vol = vol[:-1]
+        n = int(vol)
+        if n < 0 or n > 100:
+            raise ValueError
+    except ValueError:
+        await ctx.send("♥ volume must be 0-100%")
+        return
+
+    volume = n / 100
+    vc = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if vc and vc.is_playing() and isinstance(vc.source, discord.PCMVolumeTransformer):
+        vc.source.volume = volume
+
+    await ctx.send(f"♥ volume set to {n}% 🌫️")
+
+@bot.command()
+async def help(ctx):
+    await ctx.send(
+        "ambient.py --- with ♥ by czjstmax\n"
+        "> server: discord.gg/6mbgsYveCn\n"
+        "> github: github.com/jstmaxlol/ambient\n\n"
+        ":: available commands ::\n"
+        ":start - join a vc and use this command to eep ;)\n"
+        ":stop - exits from the current vc and salutes\n"
+        ":help - shows this message~!"
+    )
 
