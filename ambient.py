@@ -107,8 +107,10 @@ async def volume_cmd(ctx, vol: str):
     """set volume in % from 0-100"""
     global volume
     if vol == "?":
-        #await ctx.send(f"♥ to set the volume just type `:vol 50%` ~~!")
-        await ctx.send(f"♥ the current volume is {round(volume*100)}% ~~!")
+        await ctx.send(f"♥ the current volume is {round(volume*100)}% ;>")
+        return 0
+    elif vol == "h" or vol == "help":
+        await ctx.send(f"♥ to set the volume just type `:vol 50%` ~!")
         return 1
 
     try:
