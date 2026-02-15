@@ -139,6 +139,7 @@ async def help(ctx):
         "> github: https://github.com/jstmaxlol/ambient\n\n"
         "### >> available commands <<\n"
         "`::start` / `::join` / `::hi` / `::gm` - join a vc and use this command to eep ;)\n"
+        "`::vol n` / `::vol n%` / `::vol ?` - sets volume pct. or (when `::vol ?`) shows current volume pct.\n"
         "`::stop` / `::quit` / `::bye` / `::gn` - exits from the current vc and salutes\n"
         "`::help` / `::?` / `::h` - shows this help/usage message~!\n"
         "------------------------------"
