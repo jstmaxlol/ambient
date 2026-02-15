@@ -8,7 +8,7 @@ import random
 TOKEN = ""
 PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLuI-iSzcTZFUfVlc9OoZL5LbubQ_T_st9"
 
-volume = 0.16
+volume = 0.1
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -106,6 +106,9 @@ async def stop(ctx):
 async def volume_cmd(ctx, vol: str):
     """set volume in % from 0-100"""
     global volume
+    if vol == "?":
+        ctx.send(f"♥ to set the volume just type `:vol 50%` ~~!");
+
     try:
         if vol.endswith('%'):
             vol = vol[:-1]
