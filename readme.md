@@ -4,4 +4,5 @@
 **ambient** is a <ins>minimalistic</ins> discord bot that streams [a playlist from youtube](https://www.youtube.com/playlist?list=PLuI-iSzcTZFUfVlc9OoZL5LbubQ_T_st9)<sup>(i made it uwu)</sup>, nothing more. 
 
 > note: i host this on my thinkpad so it **will** have downtimes — i should be hosting it on my oracle vps thing but it sucks
+
 > note 2: the `srv` directory just has the `ambient.py` with the token. that's why it's `.gitignore`d.

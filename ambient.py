@@ -132,11 +132,11 @@ async def volume_cmd(ctx, vol: str):
 
 @bot.command(aliases=['?', 'h'])
 async def help(ctx):
-    await ctx.send(
+        await ctx.send(
         "------------------------------\n"
         "ambient.py --- with ♥ by czjstmax\n"
         "> server: https://discord.gg/6mbgsYveCn\n"
-        "> github: https://github.com/jstmaxlol/ambient\n\n"
+        "> repo: https://git.czkove.cc/ambient\n\n"
         "### >> available commands <<\n"
         "`::start` / `::join` / `::hi` / `::gm` - join a vc and use this command to eep ;)\n"
         "`::vol n` / `::vol n%` / `::vol ?` - sets volume pct. or (when `::vol ?`) shows current volume pct.\n"
@@ -144,6 +144,7 @@ async def help(ctx):
         "`::help` / `::?` / `::h` - shows this help/usage message~!\n"
         "------------------------------"
     )
+
 
 bot.run(TOKEN)
 
